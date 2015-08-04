@@ -1,0 +1,14 @@
+#!/bin/bash
+
+CONFIG_FILE="./.config"
+
+if [ -r $CONFIG_FILE  ]; then
+	. $CONFIG_FILE
+else
+	printf "Config file not found\n"
+	exit 1
+fi
+
+echo $ACCESS_TOKEN
+
+exit
