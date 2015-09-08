@@ -2,38 +2,38 @@
 
 CONFIG_FILE=./.config
 
-loadConfig()
+load_config()
 {
-	if [ -r "$CONFIG_FILE" ]; then
-		. $CONFIG_FILE
-	else
-		printf "Config file not found\n"
-		exit 1
-	fi
+  if [ -r "$CONFIG_FILE" ]; then
+    . $CONFIG_FILE
+  else
+    printf "Config file not found\n"
+    exit 1
+  fi
 }
 
-checkCredentials()
+check_credentials()
 {
-	if [ -z "$CONSUMER_KEY" ]; then
-		errorMessage+="Consumer key (API key) not found\n"
-	fi
-	if [ -z "$CONSUMER_SECRET" ]; then
-		errorMessage+="Consumer secret (API secret) not found\n"
-	fi
-	if [ -z "$ACCESS_TOKEN" ]; then
-		errorMessage+="Access token not found\n"
-	fi
-	if [ -z "$ACCESS_SECRET" ]; then
-		errorMessage+="Access secret not found\n"
-	fi
+  if [ -z "$CONSUMER_KEY" ]; then
+    error_message+="Consumer key (API key) not found\n"
+  fi
+  if [ -z "$CONSUMER_SECRET" ]; then
+    error_message+="Consumer secret (API secret) not found\n"
+  fi
+  if [ -z "$ACCESS_TOKEN" ]; then
+    error_message+="Access token not found\n"
+  fi
+  if [ -z "$ACCESS_SECRET" ]; then
+    error_message+="Access secret not found\n"
+  fi
 
-	if [ -n "$errorMessage" ]; then
-		printf "$errorMessage"
-	fi
+  if [ -n "$error_message" ]; then
+    printf "$error_message"
+  fi
 }
 
-loadConfig
-checkCredentials
+load_config
+check_credentials
 
 printf "Access token: %s\n" $ACCESS_TOKEN
 printf "Access secret: %s\n" $ACCESS_SECRET
