@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Simple command line application for Twitter.
 
 config_file=./.config
 
