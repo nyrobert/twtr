@@ -7,29 +7,27 @@ load_config()
   if [ -r "$config_file" ]; then
     . $config_file
   else
-    printf "Config file not found\n"
-    exit 1
+    error_handler "Config file not found"
   fi
 }
 
 check_credentials()
 {
   if [ -z "$consumer_key" ]; then
-    error_message+="Consumer key (API key) not found\n"
+    error_handler "Consumer key (API key) not found"
+  elif [ -z "$consumer_secret" ]; then
+    error_handler "Consumer secret (API secret) not found"
+  elif [ -z "$access_token" ]; then
+    error_handler "Access token not found"
+  elif [ -z "$access_secret" ]; then
+    error_handler "Access secret not found"
   fi
-  if [ -z "$consumer_secret" ]; then
-    error_message+="Consumer secret (API secret) not found\n"
-  fi
-  if [ -z "$access_token" ]; then
-    error_message+="Access token not found\n"
-  fi
-  if [ -z "$access_secret" ]; then
-    error_message+="Access secret not found\n"
-  fi
+}
 
-  if [ -n "$error_message" ]; then
-    printf "$error_message"
-  fi
+error_handler()
+{
+  printf "$1\n"
+  exit 1
 }
 
 load_config
