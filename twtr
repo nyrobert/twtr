@@ -29,7 +29,7 @@ check_config()
 
 error_handler()
 {
-  printf "$1\n"
+  echo "$1" >&2
   exit 1
 }
 
