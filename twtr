@@ -6,7 +6,7 @@ config_file=./.config
 
 load_config()
 {
-  if [ -f "$config_file" ] && [ -r "$config_file" ]; then
+  if [[ -f "$config_file" ]] && [[ -r "$config_file" ]]; then
     . $config_file
     check_config
   else
@@ -16,13 +16,13 @@ load_config()
 
 check_config()
 {
-  if [ -z "$consumer_key" ]; then
+  if [[ -z "$consumer_key" ]]; then
     error_handler "Consumer key (API key) not found"
-  elif [ -z "$consumer_secret" ]; then
+  elif [[ -z "$consumer_secret" ]]; then
     error_handler "Consumer secret (API secret) not found"
-  elif [ -z "$access_token" ]; then
+  elif [[ -z "$access_token" ]]; then
     error_handler "Access token not found"
-  elif [ -z "$access_secret" ]; then
+  elif [[ -z "$access_secret" ]]; then
     error_handler "Access secret not found"
   fi
 }
