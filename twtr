@@ -2,10 +2,9 @@
 #
 # Simple command line application for Twitter.
 
-config_file=./.config
+readonly config_file=./.config
 
-load_config()
-{
+load_config() {
   if [[ -f "$config_file" ]] && [[ -r "$config_file" ]]; then
     . $config_file
     check_config
@@ -14,8 +13,7 @@ load_config()
   fi
 }
 
-check_config()
-{
+check_config() {
   if [[ -z "$consumer_key" ]]; then
     error_handler "Consumer key (API key) not found"
   elif [[ -z "$consumer_secret" ]]; then
@@ -27,15 +25,16 @@ check_config()
   fi
 }
 
-error_handler()
-{
+error_handler() {
   echo "$1" >&2
   exit 1
 }
 
-load_config
+main() {
+  load_config
 
-printf "Access token: %s\n" $access_token
-printf "Access secret: %s\n" $access_secret
+  printf "Access token: %s\n" $access_token
+  printf "Access secret: %s\n" $access_secret
+}
 
-exit
+main
