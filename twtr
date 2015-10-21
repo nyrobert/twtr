@@ -54,7 +54,7 @@ generate_oauth_header() {
   local params_str
 
   params["oauth_consumer_key"]="${consumer_key}"
-  params["oauth_nonce"]=$(percent_encode $(generate_oauth_nonce))
+  params["oauth_nonce"]=$(generate_oauth_nonce)
   params["oauth_signature"]=""
   params["oauth_signature_method"]="${signature_method}"
   params["oauth_timestamp"]=$(date +%s)
@@ -65,7 +65,9 @@ generate_oauth_header() {
   for key in "${!params[@]}"; do
     (( i++ ))
 
-    params_str+="${key}=\"${params[$key]}\""
+    key_encoded=$(percent_encode "${key}")
+    value_encoded=$(percent_encode "${params[$key]}")
+    params_str+="${key_encoded}=\"${value_encoded}\""
 
     if [[ "${i}" -ne "${#params[@]}" ]]; then
       params_str+=", "
@@ -73,6 +75,8 @@ generate_oauth_header() {
   done
   unset i
   unset key
+  unset key_encoded
+  unset value_encoded
 
   echo "Authorization: OAuth ${params_str}"
 }
