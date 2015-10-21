@@ -3,10 +3,12 @@
 # Simple command line application for Twitter.
 
 readonly config_file=./.config
+readonly api_version="1.1"
 
 load_config() {
-  if [[ -f "$config_file" ]] && [[ -r "$config_file" ]]; then
-    . $config_file
+  if [[ -f "${config_file}" ]] && [[ -r "${config_file}" ]]; then
+    . "${config_file}"
+
     check_config
 
     readonly consumer_key
@@ -19,15 +21,60 @@ load_config() {
 }
 
 check_config() {
-  if [[ -z "$consumer_key" ]]; then
+  if [[ -z "${consumer_key}" ]]; then
     error_handler "Consumer key (API key) not found"
-  elif [[ -z "$consumer_secret" ]]; then
+  elif [[ -z "${consumer_secret}" ]]; then
     error_handler "Consumer secret (API secret) not found"
-  elif [[ -z "$access_token" ]]; then
+  elif [[ -z "${access_token}" ]]; then
     error_handler "Access token not found"
-  elif [[ -z "$access_secret" ]]; then
+  elif [[ -z "${access_secret}" ]]; then
     error_handler "Access secret not found"
   fi
+}
+
+display_timeline() {
+  local api_url="https://api.twitter.com/${api_versio}n/statuses/home_timeline.json"
+  local data="count=5"
+
+  make_api_request "${api_url}" "${data}"
+}
+
+make_api_request() {
+  echo "$1"
+  echo "$2"
+  echo $(generate_oauth_header)
+}
+
+generate_oauth_header() {
+  declare -A params
+  
+  local params
+  local params_str=""
+
+  params["oauth_consumer_key"]="${consumer_key}"
+  params["oauth_nonce"]=$(generate_oauth_nonce)
+  params["oauth_signature"]=""
+  params["oauth_signature_method"]="HMAC-SHA1"
+  params["oauth_timestamp"]=$(date +%s)
+  params["oauth_token"]="$access_token"
+  params["oauth_version"]="1.0"
+ 
+  local i=0
+  for key in "${!params[@]}"; do
+    i=i+1
+    
+    params_str+="$key=\"${params[$key]}\""
+    
+    if [[ $params[@] -eq [${i}-1] ]]; then
+      params_str+=", "
+    fi
+  done
+  
+  return "Authorization: OAuth ${params_str}"
+}
+
+generate_oauth_nonce() {
+  return $(date +%s | sha256sum | base64 | head -c 32)
 }
 
 error_handler() {
@@ -37,9 +84,7 @@ error_handler() {
 
 main() {
   load_config
-
-  printf "Access token: %s\n" $access_token
-  printf "Access secret: %s\n" $access_secret
+  display_timeline
 }
 
 main
