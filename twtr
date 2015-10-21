@@ -63,16 +63,16 @@ generate_oauth_header() {
   for key in "${!params[@]}"; do
     i=i+1
 
-    params_str+="$key=\"${params[$key]}\""
+    params_str+="${key}=\"${params[$key]}\""
 
-    if [[ $params[@] -eq [${i}-1] ]]; then
+    #if [[ "${params[@]}" -ne ["${i}"-1] ]]; then
       params_str+=", "
-    fi
+    #fi
   done
   unset i
   unset key
 
-  return "Authorization: OAuth ${params_str}"
+  echo "Authorization: OAuth ${params_str}"
 }
 
 generate_oauth_nonce() {
