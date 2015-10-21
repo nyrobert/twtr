@@ -48,20 +48,24 @@ make_api_request() {
 generate_oauth_header() {
   declare -A params
 
-  local signature_method="HMAC-SHA1"
-  local version="1.0"
   local params
   local params_str
+  local signature_method="HMAC-SHA1"
+  local version="1.0"
 
   params["oauth_consumer_key"]="${consumer_key}"
   params["oauth_nonce"]=$(generate_oauth_nonce)
-  params["oauth_signature"]=""
+  params["oauth_signature"]="!!!"
   params["oauth_signature_method"]="${signature_method}"
   params["oauth_timestamp"]=$(date +%s)
   params["oauth_token"]="$access_token"
   params["oauth_version"]="${version}"
 
   local i=0
+  local key
+  local key_encoded
+  local value_encoded
+
   for key in "${!params[@]}"; do
     (( i++ ))
 
@@ -73,10 +77,6 @@ generate_oauth_header() {
       params_str+=", "
     fi
   done
-  unset i
-  unset key
-  unset key_encoded
-  unset value_encoded
 
   echo "Authorization: OAuth ${params_str}"
 }
