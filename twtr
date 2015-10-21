@@ -33,7 +33,7 @@ check_config() {
 }
 
 display_timeline() {
-  local api_url="https://api.twitter.com/${api_versio}n/statuses/home_timeline.json"
+  local api_url="https://api.twitter.com/${api_version}/statuses/home_timeline.json"
   local data="count=5"
 
   make_api_request "${api_url}" "${data}"
@@ -48,26 +48,28 @@ make_api_request() {
 generate_oauth_header() {
   declare -A params
 
+  local signature_method="HMAC-SHA1"
+  local version="1.0"
   local params
   local params_str
 
   params["oauth_consumer_key"]="${consumer_key}"
   params["oauth_nonce"]=$(generate_oauth_nonce)
   params["oauth_signature"]=""
-  params["oauth_signature_method"]="HMAC-SHA1"
+  params["oauth_signature_method"]="${signature_method}"
   params["oauth_timestamp"]=$(date +%s)
   params["oauth_token"]="$access_token"
-  params["oauth_version"]="1.0"
+  params["oauth_version"]="${version}"
 
   local i=0
   for key in "${!params[@]}"; do
-    i=i+1
+    ((i++))
 
     params_str+="${key}=\"${params[$key]}\""
 
-    #if [[ "${params[@]}" -ne ["${i}"-1] ]]; then
+    if [[ "${i}" -ne "${#params[@]}" ]]; then
       params_str+=", "
-    #fi
+    fi
   done
   unset i
   unset key
