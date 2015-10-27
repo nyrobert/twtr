@@ -33,43 +33,55 @@ check_config() {
 }
 
 display_timeline() {
-  local api_url="https://api.twitter.com/${api_version}/statuses/home_timeline.json"
-  local data="count=5"
+  declare -A request_params
 
-  make_api_request "${api_url}" "${data}"
+  local request_params
+
+  request_params["method"]="GET"
+  request_params["url"]="https://api.twitter.com/${api_version}/statuses/home_timeline.json"
+  request_params["count"]=5
+
+  make_api_request "$(declare -p request_params)"
 }
 
 make_api_request() {
-  echo "$1"
-  echo "$2"
-  echo $(generate_oauth_header)
+  eval "declare -A request_params=${1#*=}"
+
+  local request_params
+
+  # cURL call
+
+  echo $(generate_oauth_header "$(declare -p request_params)")
 }
 
 generate_oauth_header() {
+  eval "declare -A request_params=${1#*=}"
+
+  oauth_params=$(collect_oauth_params)
+  eval "declare -A oauth_params=${oauth_params#*=}"
+
   local i=0
   local key
   local key_encoded
   local value_encoded
-  local params
-  local params_str
+  local request_params
+  local oauth_params
+  local oauth_params_str
 
-  # http://stackoverflow.com/a/8879444
-  params=$(collect_oauth_params)
-  eval "declare -A params=${params#*=}"
-
-  for key in "${!params[@]}"; do
+  for key in "${!oauth_params[@]}"; do
     (( i++ ))
 
     key_encoded=$(percent_encode "${key}")
-    value_encoded=$(percent_encode "${params[$key]}")
-    params_str+="${key_encoded}=\"${value_encoded}\""
+    value_encoded=$(percent_encode "${oauth_params[$key]}")
+    oauth_params_str+="${key_encoded}=\"${value_encoded}\""
 
-    if [[ "${i}" -ne "${#params[@]}" ]]; then
-      params_str+=", "
+    if [[ "${i}" -ne "${#oauth_params[@]}" ]]; then
+      oauth_params_str+=", "
     fi
   done
 
-  echo "Authorization: OAuth ${params_str}"
+  echo "Authorization: OAuth ${oauth_params_str}"
+  echo $(declare -p request_params)
 }
 
 collect_oauth_params() {
@@ -81,13 +93,18 @@ collect_oauth_params() {
 
   params["oauth_consumer_key"]="${consumer_key}"
   params["oauth_nonce"]=$(generate_oauth_nonce)
-  params["oauth_signature"]="!!!"
   params["oauth_signature_method"]="${signature_method}"
   params["oauth_timestamp"]=$(date +%s)
   params["oauth_token"]="$access_token"
   params["oauth_version"]="${version}"
 
   echo $(declare -p params)
+}
+
+generate_oauth_signature() {
+  local params
+
+  eval "declare -A params=${params#*=}"
 }
 
 generate_oauth_nonce() {
