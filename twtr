@@ -62,16 +62,16 @@ generate_oauth_header() {
 
   local request_params
   local oauth_params
-  local header_str
+  local oauth_str
 
   oauth_params["oauth_signature"]=$(generate_oauth_signature \
     "$(declare -p request_params)" \
     "$(declare -p oauth_params)" \
   )
 
-  header_str=$(generate_oauth_string "$(declare -p oauth_params)" ", ")
+  oauth_str=$(generate_oauth_str "$(declare -p oauth_params)" ", ")
 
-  echo "Authorization: OAuth ${header_str}"
+  echo "Authorization: OAuth ${oauth_str}"
 }
 
 collect_oauth_params() {
@@ -91,7 +91,7 @@ collect_oauth_params() {
   echo $(declare -p params)
 }
 
-generate_oauth_string() {
+generate_oauth_str() {
   eval "declare -A params=${1#*=}"
 
   local i=0
