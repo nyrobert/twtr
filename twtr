@@ -101,6 +101,7 @@ generate_oauth_signature() {
   local oauth_params
   local signature_params
   local signature_str
+  local signing_key
   local key
 
   for key in "${!request_params[@]}"; do
@@ -114,6 +115,16 @@ generate_oauth_signature() {
   done
 
   signature_str=$(generate_oauth_str "$(declare -p signature_params)" ""  "&")
+  signature_str=$(printf "%s&%s&%s" \
+    "${request_params[method]}" \
+    $(percent_encode "${request_params[url]}") \
+    $(percent_encode "${signature_str}") \
+  )
+
+  signing_key=$(printf "%s&%s" \
+    $(percent_encode "${consumer_secret}") \
+    $(percent_encode "${access_secret}") \
+  )
 
   echo "${signature_str}"
 }
