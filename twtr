@@ -60,29 +60,18 @@ generate_oauth_header() {
   oauth_params=$(collect_oauth_params)
   eval "declare -A oauth_params=${oauth_params#*=}"
 
-  local i=0
-  local key
-  local key_encoded
-  local value_encoded
   local request_params
   local oauth_params
-  local oauth_params_str
+  local header_str
 
-  oauth_params["oauth_signature"]=$(generate_oauth_signature "$(declare -p request_params)" "$(declare -p oauth_params)")
+  oauth_params["oauth_signature"]=$(generate_oauth_signature \
+    "$(declare -p request_params)" \
+    "$(declare -p oauth_params)" \
+  )
 
-  for key in "${!oauth_params[@]}"; do
-    (( i++ ))
+  header_str=$(generate_oauth_string "$(declare -p oauth_params)" ", ")
 
-    key_encoded=$(percent_encode "${key}")
-    value_encoded=$(percent_encode "${oauth_params[$key]}")
-    oauth_params_str+="${key_encoded}=\"${value_encoded}\""
-
-    if [[ "${i}" -ne "${#oauth_params[@]}" ]]; then
-      oauth_params_str+=", "
-    fi
-  done
-
-  echo "Authorization: OAuth ${oauth_params_str}"
+  echo "Authorization: OAuth ${header_str}"
 }
 
 collect_oauth_params() {
@@ -100,6 +89,31 @@ collect_oauth_params() {
   params["oauth_version"]="${version}"
 
   echo $(declare -p params)
+}
+
+generate_oauth_string() {
+  eval "declare -A params=${1#*=}"
+
+  local i=0
+  local key
+  local key_encoded
+  local value_encoded
+  local params
+  local params_str
+
+  for key in "${!params[@]}"; do
+    (( i++ ))
+
+    key_encoded=$(percent_encode "${key}")
+    value_encoded=$(percent_encode "${params[$key]}")
+    params_str+="${key_encoded}=\"${value_encoded}\""
+
+    if [[ "${i}" -ne "${#params[@]}" ]]; then
+      params_str+="$2"
+    fi
+  done
+
+  echo "${params_str}"
 }
 
 generate_oauth_signature() {
