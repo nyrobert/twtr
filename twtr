@@ -68,6 +68,8 @@ generate_oauth_header() {
   local oauth_params
   local oauth_params_str
 
+  oauth_params["oauth_signature"]=$(generate_oauth_signature "$(declare -p request_params)" "$(declare -p oauth_params)")
+
   for key in "${!oauth_params[@]}"; do
     (( i++ ))
 
@@ -81,7 +83,6 @@ generate_oauth_header() {
   done
 
   echo "Authorization: OAuth ${oauth_params_str}"
-  echo $(declare -p request_params)
 }
 
 collect_oauth_params() {
@@ -102,9 +103,14 @@ collect_oauth_params() {
 }
 
 generate_oauth_signature() {
-  local params
+  eval "declare -A request_params=${1#*=}"
+  eval "declare -A oauth_params=${2#*=}"
 
-  eval "declare -A params=${params#*=}"
+  local request_params
+  local oauth_params
+
+  echo $(declare -p request_params)
+  echo $(declare -p oauth_params)
 }
 
 generate_oauth_nonce() {
