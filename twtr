@@ -126,7 +126,9 @@ generate_oauth_signature() {
     $(percent_encode "${access_secret}") \
   )
 
-  echo "${signature_str}"
+  echo -n "${signature_str}" \
+    | openssl dgst -sha1 -hmac "${signing_key}" -binary \
+    | base64
 }
 
 
