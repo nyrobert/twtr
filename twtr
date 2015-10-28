@@ -127,9 +127,19 @@ generate_oauth_str() {
   local key_encoded
   local value_encoded
   local params
+  local params_keys
   local params_str
 
   for key in "${!params[@]}"; do
+    params_keys["${i}"]="${key}"
+    (( i++ ))
+  done
+
+  params_keys=($(printf '%s\n' "${params_keys[@]}" | sort))
+
+  i=0
+
+  for key in "${params_keys[@]}"; do
     (( i++ ))
 
     key_encoded=$(percent_encode "${key}")
@@ -142,7 +152,7 @@ generate_oauth_str() {
 
     params_str+="${key_encoded}=$2${value_encoded}$2"
 
-    if [[ "${i}" -ne "${#params[@]}" ]]; then
+    if [[ "${i}" -ne "${#params_keys[@]}" ]]; then
       params_str+="$3"
     fi
   done
