@@ -69,7 +69,7 @@ generate_oauth_header() {
     "$(declare -p oauth_params)" \
   )
 
-  oauth_str=$(generate_oauth_str "$(declare -p oauth_params)" ", ")
+  oauth_str=$(generate_oauth_str "$(declare -p oauth_params)" "\""  ", ")
 
   echo "Authorization: OAuth ${oauth_str}"
 }
@@ -85,11 +85,39 @@ collect_oauth_params() {
   params["oauth_nonce"]=$(generate_oauth_nonce)
   params["oauth_signature_method"]="${signature_method}"
   params["oauth_timestamp"]=$(date +%s)
-  params["oauth_token"]="$access_token"
+  params["oauth_token"]="${access_token}"
   params["oauth_version"]="${version}"
 
   echo $(declare -p params)
 }
+
+generate_oauth_signature() {
+  declare -A signature_params
+
+  eval "declare -A request_params=${1#*=}"
+  eval "declare -A oauth_params=${2#*=}"
+
+  local request_params
+  local oauth_params
+  local signature_params
+  local signature_str
+  local key
+
+  for key in "${!request_params[@]}"; do
+    if [[ "${key}" != "method" ]] && [[ "${key}" != "url" ]]; then
+      signature_params["${key}"]="${request_params[$key]}"
+    fi
+  done
+
+  for key in "${!oauth_params[@]}"; do
+    signature_params["${key}"]="${oauth_params[$key]}"
+  done
+
+  signature_str=$(generate_oauth_str "$(declare -p signature_params)" ""  "&")
+
+  echo "${signature_str}"
+}
+
 
 generate_oauth_str() {
   eval "declare -A params=${1#*=}"
@@ -105,26 +133,21 @@ generate_oauth_str() {
     (( i++ ))
 
     key_encoded=$(percent_encode "${key}")
-    value_encoded=$(percent_encode "${params[$key]}")
-    params_str+="${key_encoded}=\"${value_encoded}\""
+
+    if [[ "${key}" != "oauth_signature" ]]; then
+      value_encoded=$(percent_encode "${params[$key]}")
+    else
+      value_encoded="${params[$key]}"
+    fi
+
+    params_str+="${key_encoded}=$2${value_encoded}$2"
 
     if [[ "${i}" -ne "${#params[@]}" ]]; then
-      params_str+="$2"
+      params_str+="$3"
     fi
   done
 
   echo "${params_str}"
-}
-
-generate_oauth_signature() {
-  eval "declare -A request_params=${1#*=}"
-  eval "declare -A oauth_params=${2#*=}"
-
-  local request_params
-  local oauth_params
-
-  echo $(declare -p request_params)
-  echo $(declare -p oauth_params)
 }
 
 generate_oauth_nonce() {
