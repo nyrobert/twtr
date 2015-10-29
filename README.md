@@ -17,11 +17,7 @@ Simple command line Twitter application entirely written in shell script.
 5. [Generate an OAuth access token for the application](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
 6. Save your access token as `access_token` in the `.config` file
 7. Save your access token secret as `access_secret` in the `.config` file
-8. Give permission to execute the application:
-
-  ```shell
-  chmod u+x twtr
-  ```
+8. Give permission to execute the application: `chmod u+x twtr`
 
 Your `.config` file should look like this:
 
