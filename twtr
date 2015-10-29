@@ -156,12 +156,7 @@ generate_oauth_str() {
     (( i++ ))
 
     key_encoded=$(percent_encode "${key}")
-
-    if [[ "${key}" != "oauth_signature" ]]; then
-      value_encoded=$(percent_encode "${params[$key]}")
-    else
-      value_encoded="${params[$key]}"
-    fi
+    value_encoded=$(percent_encode "${params[$key]}")
 
     params_str+="${key_encoded}=$2${value_encoded}$2"
 
