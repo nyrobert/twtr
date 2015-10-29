@@ -48,10 +48,16 @@ make_api_request() {
   eval "declare -A request_params=${1#*=}"
 
   local request_params
+  local response
 
-  # cURL call
+  response=$(curl \
+    --get "${request_params[url]}" \
+    --data "${request_params[count]}" \
+    --header "$(generate_oauth_header $(declare -p request_params))" \
+    --verbose \
+  )
 
-  echo $(generate_oauth_header "$(declare -p request_params)")
+  echo "${response}"
 }
 
 generate_oauth_header() {
