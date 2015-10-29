@@ -60,7 +60,8 @@ make_api_request() {
     --get "${request_params[url]}" \
     --data "count=5" \
     --header "${header}" \
-    --verbose \
+    --silent \
+    | jq '.[0].text' \
   )
 
   echo "${response}"
