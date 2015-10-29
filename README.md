@@ -1,6 +1,6 @@
 # twtr
 
-Simple command line Twitter client written in shell script. 
+Simple command line Twitter application entirely written in shell script. 
 
 ## Requirements
 
@@ -15,8 +15,10 @@ Simple command line Twitter client written in shell script.
 3. Save your consumer key (API key) as `consumer_key` in the `.config` file
 4. Save your consumer secret (API secret) as `consumer_secret` in the `.config` file
 5. [Generate an OAuth access token for the application](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
+6. Save your access token as `access_token` in the `.config` file
+7. Save your access token secret as `access_secret` in the `.config` file
 
-Your `.config` file should look like this:
+  Your `.config` file should look like this:
 
   ```shell
   # API keys
@@ -28,15 +30,25 @@ Your `.config` file should look like this:
   access_secret="LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"
   ```
 
-Keep the "consumer secret" a secret. Do not share your "access token secret" with anyone.
+  Keep the "consumer secret" a secret. Do not share your "access token secret" with anyone.
 
-## Features
+8. Give permission to execute the application:
 
-First of all, this is project is an experiment for learning and testing shell 
-scripting possibilities. The client offers the following features:
+  ```shell
+  chmod u+x twtr
+  ```
 
-* home timeline
-* update current status
+## Usage
+
+First of all, this project is an experiment for learning and testing shell 
+scripting possibilities therefore it covers only a small part of the Twitter
+API.
+
+Display home timeline:
+
+  ```shell
+  ./twtr      
+  ```
 
 ## License
 
