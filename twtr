@@ -49,11 +49,12 @@ make_api_request() {
 
   local request_params
   local response
+  local header=$(generate_oauth_header "$(declare -p request_params)")
 
   response=$(curl \
     --get "${request_params[url]}" \
-    --data "${request_params[count]}" \
-    --header "$(generate_oauth_header $(declare -p request_params))" \
+    --data "count=5" \
+    --header "${header}" \
     --verbose \
   )
 
@@ -179,18 +180,8 @@ generate_oauth_nonce() {
 }
 
 # RFC 3986, Section 2.1.
-# https://gist.github.com/cdown/1163649
 percent_encode() {
-  local length="${#1}"
-
-  for (( i = 0; i < length; i++ )); do
-    local c="${1:i:1}"
-      case "${c}" in
-        [a-zA-Z0-9.~_-]) printf "$c" ;;
-        *) printf '%s' "${c}" | xxd -p -c1 |
-          while read c; do printf '%%%s' "${c}"; done ;;
-      esac
-  done
+  echo $(python -c "import urllib, sys; print urllib.quote(sys.argv[1], safe='')" "$1")
 }
 
 error_handler() {
