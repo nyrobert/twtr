@@ -18,7 +18,7 @@ Simple command line Twitter application entirely written in shell script.
 6. Save your access token as `access_token` in the `.config` file
 7. Save your access token secret as `access_secret` in the `.config` file
 
-  Your `.config` file should look like this:
+Your `.config` file should look like this:
 
   ```shell
   # API keys
@@ -30,7 +30,7 @@ Simple command line Twitter application entirely written in shell script.
   access_secret="LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"
   ```
 
-  Keep the "consumer secret" a secret. Do not share your "access token secret" with anyone.
+Keep the "consumer secret" a secret. Do not share your "access token secret" with anyone.
 
 8. Give permission to execute the application:
 
