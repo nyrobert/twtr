@@ -10,10 +10,11 @@ Simple command line Twitter client written in shell script.
 
 ## Installation
 
-1. Create a new app on [Twitter Apps](https://apps.twitter.com)
-2. Create `.config` file for Twitter keys and tokens.
-3. Save your consumer key (API key) as `consumer_key` in the `.config` file.
-4. Save your consumer secret (API secret) as `consumer_secret` in the `.config` file.
+1. Create a new application on [Twitter Apps](https://apps.twitter.com)
+2. Create `.config` file for Twitter keys and tokens
+3. Save your consumer key (API key) as `consumer_key` in the `.config` file
+4. Save your consumer secret (API secret) as `consumer_secret` in the `.config` file
+5. [Generate an OAuth access token for the application](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
 
 Your `.config` file should look like this:
 
