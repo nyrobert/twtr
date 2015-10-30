@@ -46,7 +46,7 @@ Display home timeline:
   ```
 
 ## Screenshots
-![Home timeline](https://raw.githubusercontent.com/nyrobert/twtr/master/screenshots/home_timeline.png)
+![Home timeline](https://raw.githubusercontent.com/nyrobert/twtr/master/screenshots/timeline.png)
 
 ## License
 
