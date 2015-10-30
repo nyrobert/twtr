@@ -2,10 +2,9 @@
 #
 # Simple command line application for Twitter.
 
-. ./oauth.sh
 . ./config.sh
-
-readonly api_version="1.1"
+. ./api.sh
+. ./oauth.sh
 
 get_timeline() {
   declare -A request_params
@@ -17,7 +16,7 @@ get_timeline() {
   request_params["url"]="https://api.twitter.com/${api_version}/statuses/home_timeline.json"
   request_params["count"]=5
 
-  response=$(make_api_request "$(declare -p request_params)")
+  response=$(api_request "$(declare -p request_params)")
 
   display_timeline "${response}"
 }
@@ -38,20 +37,6 @@ display_timeline() {
     printf "${yellow}%s ${grey}@%s${no_color}\n" "${name}" "${screen_name}"
     echo -e "${text}\n"
   done
-}
-
-make_api_request() {
-  eval "declare -A request_params=${1#*=}"
-
-  local request_params
-  local header=$(oauth_generate_header "$(declare -p request_params)")
-
-  echo $(curl \
-    --get "${request_params[url]}" \
-    --data "count=5" \
-    --header "${header}" \
-    --silent
-  )
 }
 
 error_handler() {
