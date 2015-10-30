@@ -4,16 +4,50 @@
 
 readonly api_version="1.1"
 
+# $1 array request params
+#
+# return string JSON encoded API response
 api_request() {
   eval "declare -A request_params=${1#*=}"
 
   local request_params
   local header=$(oauth_generate_header "$(declare -p request_params)")
+  local data=$(api_generate_data_str "$(declare -p request_params)")
 
   echo $(curl \
     --get "${request_params[url]}" \
-    --data "count=5" \
+    --data "${data}" \
     --header "${header}" \
     --silent
   )
+}
+
+# $1 array request params
+#
+# return string
+api_generate_data_str() {
+  eval "declare -A request_params=${1#*=}"
+
+  local i=0
+  local request_params
+  local key
+  local value_encoded
+  local data_str
+
+  unset request_params["method"]
+  unset request_params["url"]
+
+  for key in "${!request_params[@]}"; do
+    (( i++ ))
+
+    value_encoded=$(percent_encode "${request_params[$key]}")
+
+    data_str+="${key}=${value_encoded}"
+
+    if [[ "${i}" -ne "${#request_params[@]}" ]]; then
+      data_str+="&"
+    fi
+  done
+
+  echo "${data_str}"
 }
