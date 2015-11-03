@@ -55,14 +55,32 @@ display_timeline() {
   done
 }
 
+update_status() {
+  echo "status update: $1"
+}
+
 error_handler() {
   echo "$1" >&2
   exit 1
 }
 
 main() {
+  local OPTIND
+  local OPTARG
+  local opt
+
   config_load
-  get_timeline
+
+  while	 getopts ':u:' opt; do
+    case "${opt}" in
+      u) update_status "${OPTARG}" ;;
+      *) error_handler "Status text is required" ;;
+    esac
+  done
+
+  if [[ "${OPTIND}" -eq 1 ]]; then
+    get_timeline
+  fi
 }
 
-main
+main "$@"
