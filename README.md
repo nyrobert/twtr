@@ -45,6 +45,9 @@ Display home timeline:
   ./twtr      
   ```
 
+## Screenshots
+![Home timeline](https://raw.githubusercontent.com/nyrobert/twtr/master/screenshots/timeline.png)
+
 ## License
 
 This project is licensed under the terms of the [MIT License (MIT)](LICENSE).
