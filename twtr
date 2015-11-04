@@ -83,6 +83,13 @@ update_status() {
   fi
 }
 
+display_help() {
+  echo -e "Usage: twtr [options]\n"
+  echo "Options:"
+  echo "  -u <status>      Send status update"
+  echo "  -h               Display this help"
+}
+
 error_handler() {
   echo "$1" >&2
   exit 1
@@ -95,9 +102,10 @@ main() {
 
   config_load
 
-  while	 getopts ':u:' opt; do
+  while	 getopts ':u:h' opt; do
     case "${opt}" in
       u) update_status "${OPTARG}" ;;
+      h) display_help ;;
       *) error_handler "Status text is required" ;;
     esac
   done
