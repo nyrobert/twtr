@@ -56,7 +56,27 @@ display_timeline() {
 }
 
 update_status() {
-  echo "status update: $1"
+  declare -A request_params
+
+  local request_params
+  local response
+  local status_id
+
+  request_params["method"]="POST"
+  request_params["url"]="https://api.twitter.com/${api_version}/statuses/update.json"
+  request_params["status"]="$1"
+
+  echo "Sending tweet..."
+
+  response=$(api_request "$(declare -p request_params)")
+
+  status_id=$(echo "${response}" | jq -r '.id')
+
+  if [[ "${status_id}" -gt 0 ]]; then
+    echo "Success!"
+  else
+    error_handler "Error"
+  fi
 }
 
 error_handler() {

@@ -14,12 +14,23 @@ api_request() {
   local header=$(oauth_generate_header "$(declare -p request_params)")
   local data=$(api_generate_data_str "$(declare -p request_params)")
 
-  echo $(curl \
-    --get "${request_params[url]}" \
-    --data "${data}" \
-    --header "${header}" \
-    --silent
-  )
+  if [[ "${request_params[method]}" = "GET" ]]; then
+    echo $(curl \
+      --get "${request_params[url]}" \
+      --data "${data}" \
+      --header "${header}" \
+      --silent
+    )
+  elif [[ "${request_params[method]}" = "POST" ]]; then
+    echo $(curl \
+      --request "POST" "${request_params[url]}" \
+      --data "${data}" \
+      --header "${header}" \
+      --silent
+    )
+  else
+    error_handler "Invalid API request method"
+  fi
 }
 
 # $1 array request params
