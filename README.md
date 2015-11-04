@@ -45,6 +45,12 @@ Display home timeline:
   ./twtr      
   ```
 
+Send status update:
+
+  ```shell
+  ./twtr -u "Hello bello!"
+  ```
+
 ## Screenshots
 ![Home timeline](https://raw.githubusercontent.com/nyrobert/twtr/master/screenshots/timeline.png)
 
