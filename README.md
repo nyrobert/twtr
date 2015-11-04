@@ -51,6 +51,12 @@ Send status update:
   ./twtr -u "The only source of knowledge is experience. - Albert Einstein"
   ```
 
+Display application help:
+
+  ```shell
+  ./twtr -h
+  ```
+
 ## Screenshots
 ![Home timeline](https://raw.githubusercontent.com/nyrobert/twtr/master/screenshots/timeline.png)
 
