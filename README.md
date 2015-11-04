@@ -48,7 +48,7 @@ Display home timeline:
 Send status update:
 
   ```shell
-  ./twtr -u "Hello bello!"
+  ./twtr -u "There is something behind the throne greater than the king himself"
   ```
 
 ## Screenshots
