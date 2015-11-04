@@ -48,7 +48,7 @@ Display home timeline:
 Send status update:
 
   ```shell
-  ./twtr -u "There is something behind the throne greater than the king himself"
+  ./twtr -u "The only source of knowledge is experience. - Albert Einstein"
   ```
 
 ## Screenshots
