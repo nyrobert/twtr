@@ -58,6 +58,10 @@ display_timeline() {
 update_status() {
   declare -A request_params
 
+  if [[ "${#1}" -gt 140 ]]; then
+    error_handler "Status text is too long, should be up to 140 characters"
+  fi
+
   local request_params
   local response
   local status_id
