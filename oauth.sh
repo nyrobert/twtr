@@ -130,7 +130,7 @@ oauth_generate_str() {
 
 # return string
 oauth_generate_nonce() {
-  echo $(date +%s | sha256sum | base64 | head -c 32)
+  echo $(date +%s | shasum | base64 | head -c 32)
 }
 
 # RFC 3986, Section 2.1.
